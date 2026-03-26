@@ -14,12 +14,14 @@ def main():
                         help="Directory to save output video relative to project root")
     parser.add_argument("--detector", type=str, default="yolo", choices=["yolo", "mog2"],
                         help="Detection backend: 'yolo' (YOLOv8, recommended) or 'mog2' (legacy)")
-    parser.add_argument("--yolo-model", type=str, default="yolov8n.pt",
-                        help="YOLOv8 model weight file (e.g. yolov8n.pt, yolov8s.pt)")
-    parser.add_argument("--conf", type=float, default=0.35,
-                        help="YOLO confidence threshold")
-    parser.add_argument("--iou", type=float, default=0.45,
-                        help="YOLO NMS IOU threshold")
+    parser.add_argument("--yolo-model", type=str, default="yolov8s.pt",
+                        help="YOLOv8 model weight file (e.g. yolov8n.pt, yolov8s.pt, yolov8m.pt)")
+    parser.add_argument("--conf", type=float, default=0.25,
+                        help="YOLO confidence threshold (lower = more detections)")
+    parser.add_argument("--iou", type=float, default=0.4,
+                        help="YOLO NMS IOU threshold (lower = fewer overlapping boxes)")
+    parser.add_argument("--imgsz", type=int, default=1280,
+                        help="YOLO inference resolution (higher = better for small objects)")
     args = parser.parse_args()
 
     # ---- paths -----------------------------------------------------------
@@ -48,7 +50,10 @@ def main():
     # ---- detector --------------------------------------------------------
     if args.detector == "yolo":
         from yolo_detector import YOLODetector
-        detector = YOLODetector(model_name=args.yolo_model, conf=args.conf, iou=args.iou)
+        detector = YOLODetector(
+            model_name=args.yolo_model, conf=args.conf,
+            iou=args.iou, imgsz=args.imgsz,
+        )
         use_yolo = True
         print(f"[main] Using YOLOv8 detector ({args.yolo_model})")
     else:
