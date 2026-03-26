@@ -5,3 +5,4 @@ deep-sort-realtime
 torch
 torchvision
 ultralytics
+PyQt5
