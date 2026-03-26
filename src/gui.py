@@ -28,39 +28,43 @@ QMainWindow {
 }
 QLabel {
     color: #cdd6f4;
+    font-size: 16px;
 }
 QLabel#title {
     color: #89b4fa;
-    font-size: 20px;
+    font-size: 26px;
     font-weight: bold;
+    padding: 10px 0;
 }
 QLabel#videoDisplay {
     background-color: #11111b;
     border: 2px solid #313244;
-    border-radius: 8px;
+    border-radius: 10px;
+    font-size: 18px;
 }
 QGroupBox {
-    color: #a6adc8;
+    color: #bac2de;
     border: 1px solid #313244;
-    border-radius: 6px;
-    margin-top: 12px;
-    padding-top: 18px;
+    border-radius: 10px;
+    margin-top: 16px;
+    padding: 24px 16px 16px 16px;
+    font-size: 17px;
     font-weight: bold;
 }
 QGroupBox::title {
     subcontrol-origin: margin;
-    left: 10px;
-    padding: 0 6px;
+    left: 14px;
+    padding: 0 10px;
 }
 QPushButton {
     background-color: #313244;
     color: #cdd6f4;
     border: 1px solid #45475a;
-    border-radius: 6px;
-    padding: 10px 20px;
-    font-size: 13px;
+    border-radius: 10px;
+    padding: 14px 28px;
+    font-size: 17px;
     font-weight: bold;
-    min-width: 140px;
+    min-width: 180px;
 }
 QPushButton:hover {
     background-color: #45475a;
@@ -107,12 +111,24 @@ QPushButton#exitBtn:hover {
 }
 QLabel#statValue {
     color: #a6e3a1;
-    font-size: 14px;
+    font-size: 28px;
     font-weight: bold;
+    padding: 4px 0;
 }
 QLabel#statLabel {
-    color: #6c7086;
-    font-size: 11px;
+    color: #9399b2;
+    font-size: 15px;
+    font-weight: normal;
+}
+QLabel#videoInfo {
+    color: #89b4fa;
+    font-size: 16px;
+}
+QLabel#statusLabel {
+    color: #a6adc8;
+    font-size: 15px;
+    font-style: italic;
+    padding: 8px 0;
 }
 """
 
@@ -163,12 +179,12 @@ class MainWindow(QMainWindow):
 
         # ── Right: controls + stats ──────────────────────────────────────
         right = QVBoxLayout()
-        right.setSpacing(12)
+        right.setSpacing(14)
 
         # Controls group
         ctrl_box = QGroupBox("Controls")
         ctrl_layout = QVBoxLayout()
-        ctrl_layout.setSpacing(8)
+        ctrl_layout.setSpacing(10)
 
         self.select_btn = QPushButton("Select Video")
         self.select_btn.clicked.connect(self._on_select)
@@ -198,37 +214,42 @@ class MainWindow(QMainWindow):
         info_box = QGroupBox("Video")
         info_layout = QVBoxLayout()
         self.video_name_label = QLabel("None selected")
+        self.video_name_label.setObjectName("videoInfo")
         self.video_name_label.setWordWrap(True)
         info_layout.addWidget(self.video_name_label)
         info_box.setLayout(info_layout)
         right.addWidget(info_box)
 
-        # Statistics group
+        # Statistics group — vertical card layout (label above value)
         stats_box = QGroupBox("Statistics")
         stats_layout = QVBoxLayout()
-        stats_layout.setSpacing(10)
+        stats_layout.setSpacing(6)
 
-        self.stat_model = self._make_stat_row("Model", "-")
-        stats_layout.addLayout(self.stat_model[0])
+        self.stat_model = self._make_stat_card("MODEL", "-")
+        stats_layout.addWidget(self.stat_model[0])
 
-        self.stat_fps = self._make_stat_row("FPS", "-")
-        stats_layout.addLayout(self.stat_fps[0])
+        # Row of FPS + Frame side-by-side
+        row1 = QHBoxLayout()
+        self.stat_fps = self._make_stat_card("FPS", "-")
+        row1.addWidget(self.stat_fps[0])
+        self.stat_frame = self._make_stat_card("FRAME", "-")
+        row1.addWidget(self.stat_frame[0])
+        stats_layout.addLayout(row1)
 
-        self.stat_frame = self._make_stat_row("Frame", "-")
-        stats_layout.addLayout(self.stat_frame[0])
-
-        self.stat_tracks = self._make_stat_row("Active Tracks", "-")
-        stats_layout.addLayout(self.stat_tracks[0])
-
-        self.stat_dets = self._make_stat_row("Detections", "-")
-        stats_layout.addLayout(self.stat_dets[0])
+        # Row of Tracks + Detections side-by-side
+        row2 = QHBoxLayout()
+        self.stat_tracks = self._make_stat_card("TRACKS", "-")
+        row2.addWidget(self.stat_tracks[0])
+        self.stat_dets = self._make_stat_card("DETECTIONS", "-")
+        row2.addWidget(self.stat_dets[0])
+        stats_layout.addLayout(row2)
 
         stats_box.setLayout(stats_layout)
         right.addWidget(stats_box)
 
         # Status label
         self.status_label = QLabel("Ready")
-        self.status_label.setStyleSheet("color: #6c7086; font-style: italic;")
+        self.status_label.setObjectName("statusLabel")
         self.status_label.setWordWrap(True)
         right.addWidget(self.status_label)
 
@@ -236,16 +257,24 @@ class MainWindow(QMainWindow):
         root.addLayout(right, 1)
 
     @staticmethod
-    def _make_stat_row(label_text, default):
-        layout = QHBoxLayout()
+    def _make_stat_card(label_text, default):
+        """Creates a vertical stat card: small label on top, large value below."""
+        container = QWidget()
+        layout = QVBoxLayout(container)
+        layout.setContentsMargins(10, 8, 10, 8)
+        layout.setSpacing(4)
+
         lbl = QLabel(label_text)
         lbl.setObjectName("statLabel")
+        lbl.setAlignment(Qt.AlignLeft)
+        layout.addWidget(lbl)
+
         val = QLabel(default)
         val.setObjectName("statValue")
-        val.setAlignment(Qt.AlignRight)
-        layout.addWidget(lbl)
+        val.setAlignment(Qt.AlignLeft)
         layout.addWidget(val)
-        return layout, val
+
+        return container, val
 
     # ── Slots ────────────────────────────────────────────────────────────
 
