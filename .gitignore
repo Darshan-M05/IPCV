@@ -1,0 +1,27 @@
+# Datasets and extracted frames
+dataset/
+dataset_frames/
+processed_dataset/
+sample_before_after/
+
+# Output files
+output/
+
+# Video files
+*.mp4
+*.avi
+*.mov
+*.mkv
+
+# Arrays and AI model weights
+*.npy
+*.pt
+*.pth
+
+# Python cache
+__pycache__/
+*.pyc
+
+# OS generated
+.DS_Store
+Thumbs.db
