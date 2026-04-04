@@ -6,3 +6,7 @@ torch
 torchvision
 ultralytics
 PyQt5
+tqdm
+scikit-learn
+matplotlib
+seaborn
