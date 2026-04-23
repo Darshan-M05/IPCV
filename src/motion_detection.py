@@ -14,7 +14,14 @@ class MotionDetector:
         learning_rate=0.005,           # Slow background adaptation for surveillance scenes
     ):
         """
-        Improved MOG2-based motion detector with:
+        Improved MOG2-based motion detector:
+        
+        [IPCV Syllabus Mapping - UNIT II: Image Segmentation and Alignment]
+          - Segmentation: Background subtraction via Mixture of Gaussians natively separates foreground 
+            (dynamic objects) from static background frames.
+          - Mode finding / Energy methods: Distinguishes shifting pixel energy values continuously to
+            map valid contours.
+
         - Gaussian blur to smooth noise before subtraction
         - Dilation to fill small holes inside moving objects
         - Erosion to separate nearby/touching blobs

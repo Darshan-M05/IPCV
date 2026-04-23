@@ -5,6 +5,12 @@ class TrajectoryTracker:
     def __init__(self, max_points=50):
         """
         Initializes the Trajectory Tracker.
+
+        [IPCV Syllabus Mapping - UNIT V: Object Measurement, Pose Estimation and Understanding]
+          - Object Measurement: Counting continuous positional locations to map speed vectors and 
+            trajectory lengths.
+          - Image Understanding: Connecting spatial dots to visually output analytical path trails.
+
         max_points: Max number of history points to keep for a trajectory.
         """
         # Dictionary to store trajectories. Key is track_id, value is a deque of points.

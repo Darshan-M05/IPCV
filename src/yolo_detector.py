@@ -19,7 +19,13 @@ _CLASS_NAMES = {
 
 class YOLODetector:
     """
-    YOLOv8-based object detector optimised for surveillance accuracy.
+    YOLOv8-based object detector optimized for surveillance accuracy.
+
+    [IPCV Syllabus Mapping - UNIT III: Object Detection, Recognition, and context]
+      - Object detection: Deep Learning model locating bounded coordinates dynamically.
+      - Instance recognition: Extrapolating specific features separating varying object types
+        overlapping in contextual scenes.
+      - Scene understanding: Agnostic NMS implementations isolating object boundaries locally.
 
     Key design choices (Phase 5 tuning):
       • Default model upgraded to yolov8s (small) — better accuracy than nano,

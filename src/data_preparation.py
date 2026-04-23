@@ -1,6 +1,13 @@
 """
 Step 1: Dataset Frame Extraction & Auto-Labelling
 ==================================================
+
+[IPCV Syllabus Mapping - UNIT IV: Vision Datasets and Model Predictions]
+  - Creating Vision Datasets: Manages the collection and restructuring of raw imagery datasets.
+  - Labeling at Scale: Automates annotation categorization bypassing severe manual overheads by 
+    using model predictions (YOLO) dynamically.
+  - Model Predictions: Initiates pre-trained YOLO instance weights performing online classification.
+
 Reads all VIRAT videos, extracts frames at a configurable interval,
 runs YOLOv8 to classify each frame, and saves them into labelled folders.
 

@@ -26,23 +26,25 @@ BASE_DIR = os.path.dirname(_SRC_DIR)
 
 
 def preprocess_image(image, target_size=224):
-    """Apply the full preprocessing pipeline to a single image.
+    """
+    Apply the full preprocessing pipeline to a single image.
 
-    Pipeline:
-        1. Resize to target_size × target_size
-        2. Gaussian blur (denoise)
-        3. CLAHE (Contrast Limited Adaptive Histogram Equalisation)
+    [IPCV Syllabus Mapping - UNIT I: Image Processing]
+      - Geometric Transformations: Resizing pixel matrices.
+      - Linear Filtering: Gaussian kernels to convolute matrices.
+      - Point Operators: CLAHE performing non-linear contrast adjustments.
 
     Returns:
         processed : preprocessed BGR image
     """
-    # 1. Resize
+    # 1. Geometric Transformation: Resize (Affine bounds)
     resized = cv2.resize(image, (target_size, target_size))
 
-    # 2. Gaussian denoise
+    # 2. Linear Filtering: Gaussian Denoise (5x5 spatial domain)
+    # Suppresses high-frequency artifacts safely.
     denoised = cv2.GaussianBlur(resized, (5, 5), 0)
 
-    # 3. CLAHE on the L channel of LAB colour space
+    # 3. Point Operators: CLAHE on luminance (L channel)
     lab = cv2.cvtColor(denoised, cv2.COLOR_BGR2LAB)
     l_chan, a_chan, b_chan = cv2.split(lab)
     clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
